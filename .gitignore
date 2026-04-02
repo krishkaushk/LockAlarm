@@ -1,0 +1,32 @@
+# Database — personal session data, not for sharing
+data/*.db
+
+# Debug images created during testing
+*.jpg
+*.png
+
+# MediaPipe model — 3.6MB, users download it themselves
+assets/*.task
+
+# Python cache files — generated automatically, never commit these
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment — if you ever create one
+venv/
+.venv/
+env/
+
+# macOS junk
+.DS_Store
+
+# Claude Code local settings
+.claude/
+
+# Screenshots taken during development
+Screenshot*.png
+
+# IDE settings
+.vscode/
+.idea/
