@@ -3,7 +3,7 @@ main.py — terminal-style cv2 loop.
 Keys: [P] pause/resume  [Q] quit
 """
 
-import threading
+import random
 import time
 from pathlib import Path
 
@@ -35,25 +35,42 @@ FLASH_ON     = 3
 _ALARM_PATH = Path(__file__).parent / "assets" / "alarm.mp3"
 _BEEP, _SR  = sf.read(str(_ALARM_PATH), dtype="float32")  # loads full file into RAM
 
-_alarm_active = False
+_alarm_stream: sd.OutputStream | None = None
+_alarm_pos = [0]  # sample position — list so the callback can mutate it
 
-def _alarm_loop():
-    while _alarm_active:
-        sd.play(_BEEP, _SR)
-        sd.wait()           # blocks until beep finishes, then immediately loops
+def _alarm_callback(outdata, frames, _time, _status):
+    """Audio thread callback: copies frames from _BEEP, wrapping seamlessly."""
+    pos   = _alarm_pos[0]
+    total = len(_BEEP)
+    wrote = 0
+    while wrote < frames:
+        chunk = min(frames - wrote, total - pos)
+        outdata[wrote:wrote + chunk] = _BEEP[pos:pos + chunk]
+        pos    = (pos + chunk) % total
+        wrote += chunk
+    _alarm_pos[0] = pos
 
 def start_alarm():
-    global _alarm_active
-    if _alarm_active:
+    global _alarm_stream
+    if _alarm_stream is not None and _alarm_stream.active:
         return
-    _alarm_active = True
-    threading.Thread(target=_alarm_loop, daemon=True).start()
+    offset_seconds = random.choice([0.0, 2.0, 4.0])
+    _alarm_pos[0] = int(offset_seconds * _SR) % len(_BEEP)
+    channels = _BEEP.shape[1] if _BEEP.ndim > 1 else 1
+    _alarm_stream = sd.OutputStream(
+        samplerate=_SR,
+        channels=channels,
+        dtype="float32",
+        callback=_alarm_callback,
+    )
+    _alarm_stream.start()
 
 def stop_alarm():
-    global _alarm_active
-    _alarm_active = False
-    sd.stop()              # kills any in-progress playback immediately
-
+    global _alarm_stream
+    if _alarm_stream is not None:
+        _alarm_stream.stop()
+        _alarm_stream.close()
+        _alarm_stream = None
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
