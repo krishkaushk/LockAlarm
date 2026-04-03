@@ -135,3 +135,4 @@ class SessionManager:
             "focus_score":       round(focus / total * 100, 1) if total > 0 else 0.0,
             "is_distracted":     self._in_distraction,
         }
+

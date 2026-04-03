@@ -4,12 +4,9 @@ opencv-python>=4.8
 # Face landmark detection (468 points per face)
 mediapipe>=0.10
 
-# Desktop GUI framework
-PyQt6>=6.5
-PyQt6-Qt6>=6.5
-
-# Charts embedded inside the Qt app
-matplotlib>=3.7
-
 # Math for EAR distance calculations
 numpy>=1.24
+
+# Zero-latency audio playback — pre-decoded PCM, no subprocess
+sounddevice>=0.4
+soundfile>=0.12

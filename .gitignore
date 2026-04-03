@@ -1,6 +1,9 @@
 # Database — personal session data, not for sharing
 data/*.db
 
+# Database manager — local only
+core/db_manager.py
+
 # Debug images created during testing
 *.jpg
 *.png
