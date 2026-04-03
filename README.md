@@ -1,6 +1,6 @@
 # LockAlarm
 
-Webcam-based focus monitor. Watches your eyes and head position — if you look away, an alarm fires instantly. Terminal-style cv2 window, no GUI bloat.
+Webcam-based focus monitor. Watches your eyes and head position — if you look away, an alarm blares instantly. Run from the terminal; UI is a native OpenCV window.
 
 ## What it does
 - Detects if you're looking at the screen using MediaPipe Face Landmarks.
