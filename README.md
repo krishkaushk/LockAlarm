@@ -96,4 +96,3 @@ If EAR stays below `0.22` for **20 consecutive frames** (~650ms at 30fps) → di
 
 - Python 3.10+
 - Webcam
-- macOS (alarm uses `sounddevice` — works cross-platform)
